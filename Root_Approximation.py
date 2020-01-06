@@ -1,10 +1,11 @@
 #!/usr/bin/python
 import math
 
-#Calculates the roots of quadratic equation ax^2+ bx +y using approximation and formulas 1.1 and 1.2
+#Calculates the roots of quadratic equation ax^2+ bx +y using nth digit approximation
+#and formulas 1 and 2
 
-#Computes the absolute error and relative error in approximations of p by p∗
-#p* is an approximation of p
+#Computes the absolute error and relative error in approximations
+#of answer obained as compared to input exact answer
 
 #Function to make sure input is correct and convert to float or int
 def IntegerOrNot (x):
@@ -16,45 +17,67 @@ def IntegerOrNot (x):
         return val
     except ValueError:
         print("Please enter a valid number.")
-        exit()
 
 #Digit approximation
 def round_half_up(n, decimals=0):
+    n_sig_string = "{0:.4E}".format(n)
     multiplier = 10 ** decimals
-    return float(math.floor(n*multiplier + 0.5) / multiplier)
+    rounded_sig_fig = math.floor(float(n_sig_string[0:6])*multiplier + 0.5) / multiplier
+    if "-" in (n_sig_string[len(n_sig_string)-3:len(n_sig_string)]):
+        decimal = rounded_sig_fig*(math.pow(10,float(n_sig_string [len(n_sig_string)-3:len(n_sig_string)])))
+    else:
+        decimal = float(rounded_sig_fig*(math.pow(10,float(n_sig_string [len(n_sig_string)-2:len(n_sig_string)]))))
+    return decimal
 
 def round_half_down(n, decimals=0):
+    n_sig_string = "{0:.4E}".format(n)
     multiplier = 10 ** decimals
-    return float(math.ceil(n*multiplier - 0.5) / multiplier)
+    rounded_sig_fig = math.ceil(float(n_sig_string[0:7])*multiplier - 0.5) / multiplier
+    if "-" in (n_sig_string[len(n_sig_string)-3:len(n_sig_string)]):
+        decimal = rounded_sig_fig*(math.pow(10,float(n_sig_string [len(n_sig_string)-3:len(n_sig_string)])))
+    else:
+        decimal = float(rounded_sig_fig*(math.pow(10,float(n_sig_string [len(n_sig_string)-2:len(n_sig_string)]))))
+    return decimal
 
 def rounder (m, approximation_digit):
     if m < 0:
         m = round_half_down(m, approximation_digit);
-    if m > 0:
+    elif m > 0:
         m = round_half_up(m, approximation_digit);
-    return float(m);
+    return m;
 
 #ask for a, b and c and digit approximation
-coefficient_a = input("Enter coefficient a: ");
-coefficient_a = IntegerOrNot(coefficient_a);
+coefficient_a = None
+while coefficient_a == None:
+    coefficient_a = input("Enter coefficient a: ");
+    coefficient_a = IntegerOrNot(coefficient_a);
 
+coefficient_b = None
+while coefficient_b == None:
+    coefficient_b = input("Enter coefficient b: ");
+    coefficient_b = IntegerOrNot(coefficient_b);
 
-coefficient_b = input("Enter coefficient b: ");
-coefficient_b = IntegerOrNot(coefficient_b);
+coefficient_c = None
+while coefficient_c == None:
+    coefficient_c = input("Enter coefficient c: ");
+    coefficient_c = IntegerOrNot(coefficient_c);
 
-coefficient_c = input("Enter coefficient c: ");
-coefficient_c = IntegerOrNot(coefficient_c);
+while True:
+    try:
+        approximation_digit = int(input("Enter the digit to which you would like to approximate: "));
+        break
+    except ValueError:
+        print("Please enter a valid number.")
+x_1 = None
+while x_1 == None:
+    x_1 = input("Enter the exact value of x_1: ");
+    x_1 = IntegerOrNot(x_1);
+x_2 = None
+while x_2 == None:
+    x_2 = input("Enter the exact value of x_2: ");
+    x_2 = IntegerOrNot(x_2);
 
-approximation_digit = input("Enter the decimal to which you would like to approximate: ");
-approximation_digit = IntegerOrNot(approximation_digit);
-
-x_1 = input("Enter the exact value of x_1: ");
-x_1 = IntegerOrNot(x_1);
-
-x_2 = input("Enter the exact value of x_2: ");
-x_2 = IntegerOrNot(x_2);
-
-#Formula 1
+#Formula 1 step-by-step
 rounded_b = rounder(coefficient_b, approximation_digit)
 b_squared = math.pow(rounded_b, 2)
 rounded_b_squared = rounder(b_squared, approximation_digit)
